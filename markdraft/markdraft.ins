@@ -1,0 +1,48 @@
+\input docstrip.tex
+\keepsilent
+\usedir{tex/latex/markdraft}
+
+\preamble
+
+LaTeX2e package that adds ``DRAFT'' to all four corners of every page.
+
+Copyright (c) 2021-2022 Jesse Knight <jesse.knight@mail.utoronto.ca>
+
+This work may be distributed and/or modified under the conditions of
+the LaTeX Project Public Licence, either version 1.3c of this licence
+or (at your option) any later version.
+The latest version of this licence is in
+    http://www.latex-project.org/lppl.txt
+and version 1.3c or later is part of all distributions of LaTeX
+version 2005/12/01 or later.
+Note that the output thesis document (e.g. PDF)
+is not considered a "Compiled Work"
+and is not covered by the licence.
+
+This work has the LPPL maintenance status "maintained".
+
+The Current Maintainer of this work is
+Jesse Knight <jesse.knight@mail.utoronto.ca>.
+
+This work consists of the files:
+- README
+- markdraft.dtx
+- markdraft.ins
+- markdraft.pdf (derived user manual)
+- markdraft.sty (derived class file)
+
+To generate markdraft.sty (class file), run: pdflatex markdraft.ins
+To generate markdraft.pdf (documentation), run: pdflatex markdraft.dtx
+To use the class, make markdraft.sty visible to your LaTeX distribution,
+by placing markdraft.sty either in your working directory,
+or in your texmf tree, perhaps: $texmf/tex/latex/markdraft/markdraft.sty
+and the documentation: $texmf/doc/latex/markdraft/markdraft.pdf
+
+See version history on GitHub:
+[https://github.com/jessexknight/markdraft]
+
+\endpreamble
+
+\generate{\file{markdraft.sty}{\from{markdraft.dtx}{class}}}
+
+\endbatchfile

@@ -1,0 +1,171 @@
+% \iffalse
+%<*driver>
+\ProvidesFile{markdraft.dtx}
+%</driver>
+%<class>\NeedsTeXFormat{LaTeX2e}[1999/12/01]
+%<class>\ProvidesClass{markdraft}
+%<*class>
+[2021/08/04 v0.0.1 Mark page corners with DRAFT]
+%</class>
+%
+%<*driver>
+\documentclass[10pt]{ltxdoc}
+\usepackage[sfdefault,osf,tabular]{biolinum}
+\usepackage[scaled=.9]{zlmtt}
+\usepackage[margin=3cm,inner=5cm]{geometry}
+\usepackage{xcolor}
+\definecolor{code}{HTML}{990033}
+\let\ottfamily\ttfamily
+\renewcommand{\ttfamily}{\color{code}\ottfamily}
+\renewcommand{\MacroFont}{\ttfamily\color{code}}
+\usepackage[colorlinks]{hyperref}
+\setlength{\skip\footins}{4ex}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+\newcommand{\smacro}[2][0]{%
+  \begin{macro}{#2}\end{macro}%
+  \vspace{\dimexpr #1\baselineskip-3\baselineskip}}
+\begin{document}
+  \DocInput{markdraft.dtx}
+\end{document}
+%</driver>
+% \fi
+%
+% \GetFileInfo{markdraft.dtx}
+%
+% \title{The \texttt{markdraft} package
+%   \thanks{\fileversion~[\filedate] CTAN repository [TBC]:
+%   \href{https://ctan.org/pkg/markdraft}
+%        {\texttt{https://ctan.org/pkg/markdraft}}}}
+% \author{
+%   Jesse Knight
+%     \thanks{maintainer, contact:
+%     \href{mailto:jesse.knight@mail.utoronto.ca}
+%          {\texttt{jesse.knight@mail.utoronto.ca}}}
+% }
+%
+% \maketitle
+%
+% \begin{abstract}\noindent
+%   Adds ``DRAFT'' to all four corners of every page,
+%   and the date bottom centre,
+%   without affecting the real headers or footers.
+% \end{abstract}
+%
+% \section{Usage}
+%
+% |\usepackage{markdraft}|\\
+% |\usepackage[<options>]{markdraft}|
+%
+% \subsection{Options}
+%
+% This package uses keyword options like |key=value|.
+% The default options are shown below.
+%
+% \begin{macro}{[text=DRAFT]}
+%   The text that appears in each corner.
+%   Use |text={text with spaces}| for text with spaces.
+% \end{macro}
+%
+% \begin{macro}{[date=\today]}
+%   The text that appears at the bottom centre.
+%   Use |date={}| to remove the date.
+% \end{macro}
+%
+% \begin{macro}{[offset=5mm]}
+%   The offset (vertical and horizontal) between the text and each page edge.
+% \end{macro}
+%
+% \subsection{Hooks}
+%
+% The following hooks are also provided, which can be redefined as needed.
+%
+% \begin{macro}{\markdraft@style}
+%   The style applied to all marks.\\
+%   Default: |\scriptsize\sffamily|
+% \end{macro}
+%
+% \begin{macro}{\@markdraft@**}
+%   The text used as the
+%   top-inner (|ti|),
+%   top-outer (|to|),
+%   top-centre (|tc|),
+%   bottom-inner (|bi|),
+%   bottom-outer (|bo|), and
+%   bottom-centre (|bc|) marks, respectively.\\
+%   Default: |\markdraft@text| for |ti|,~|to|,~|bi|,~and~|bo|;
+%   |\markdraft@date| for |bc|; empty for |tc|.
+% \end{macro}
+%
+% \section{Related Packages}
+%
+% The \href{https://ctan.org/pkg/draftmark}{draftmark} package
+% places a huge watermark on each page,
+% which is useful, but can be distracting,
+% motivating the current package.
+%
+% \clearpage
+%
+% \section{Implementation}
+%
+% Specify required packages.
+%
+%    \begin{macrocode}
+\RequirePackage{kvoptions}
+\RequirePackage{ifoddpage}
+\RequirePackage{picture}
+\RequirePackage{atbegshi}
+%    \end{macrocode}
+%
+% Define the options.
+%
+%    \begin{macrocode}
+\DeclareStringOption[DRAFT]{text}[DRAFT]
+\DeclareStringOption[\today]{date}[\today]
+\DeclareStringOption[5mm]{offset}[5mm]
+\ProcessKeyvalOptions*
+%    \end{macrocode}
+%
+% Add some hooks for overriding
+% the default style and text values for the 6 mark locations.
+%
+%    \begin{macrocode}
+\def\markdraft@style{\scriptsize\sffamily}
+\def\@markdraft@ti{\markdraft@text}
+\def\@markdraft@to{\markdraft@text}
+\def\@markdraft@tc{}
+\def\@markdraft@bi{\markdraft@text}
+\def\@markdraft@bo{\markdraft@text}
+\def\@markdraft@bc{\markdraft@date}
+%    \end{macrocode}
+%
+% Add code to generate the marks on every page.
+% The |\checkoddpage| and |\ifoddpage| are only needed to support the hooks.
+%
+%    \begin{macrocode}
+\AtBeginDocument{%
+  \AtBeginShipout{\AtBeginShipoutUpperLeft{%
+    \checkoddpage%
+    \markdraft@style%
+    \put(+\markdraft@offset,%
+         -\markdraft@offset-\f@size pt)%
+         {\rlap{\ifoddpage\@markdraft@ti\else\@markdraft@to\fi}}%
+    \put(-\markdraft@offset+\paperwidth,%
+         -\markdraft@offset-\f@size pt)%
+         {\llap{\ifoddpage\@markdraft@to\else\@markdraft@ti\fi}}%
+    \put(+0.5\paperwidth,%
+         -\markdraft@offset-\f@size pt)%
+         {\makebox[0pt][c]{\@markdraft@tc}}%
+    \put(+\markdraft@offset,%
+         +\markdraft@offset-\paperheight)%
+         {\rlap{\ifoddpage\@markdraft@bi\else\@markdraft@bo\fi}}%
+    \put(-\markdraft@offset+\paperwidth,%
+         +\markdraft@offset-\paperheight)%
+         {\llap{\ifoddpage\@markdraft@bo\else\@markdraft@bi\fi}}%
+    \put(+0.5\paperwidth,%
+         +\markdraft@offset-\paperheight)%
+         {\makebox[0pt][c]{\@markdraft@bc}}%
+}}}
+%    \end{macrocode}
+%
+\endinput
