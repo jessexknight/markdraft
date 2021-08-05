@@ -13,8 +13,8 @@ Within this [repo](https://github.com/jessexknight/markdraft):
 - `test/`: some example usage of the package, including:
   - `mwe`: a minimal working example
   - `full`: a more complex example
+- `tds/`: output for easy installing
 - `makefile`: compile stuff
-- `ctan/`: output for uploading to CTAN
 
 ## Installation
 
